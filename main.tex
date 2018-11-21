@@ -168,8 +168,9 @@ In the empirical study, we apply the same BM and POT methods as in the simulatio
 
 For the empirical application, we consider an investment portfolio consisting of the STOXX Europe 600 index and the Barclays Euro Aggregate Treasury Total Return Index, to represent the stock and bond markets respectively. The data consists of daily observations starting from January 1, 2000 till December 31, 2017. This period is interesting as it contains two major financial crises: the burst of the dot-com bubble and the 2008 global financial crisis.\\
 
-The remainder of this paper is structured as follows. Section 3 discusses the current literature. Section 4 closely examines the empirical data. The methodology is outlined in section 5, where the POT and BM methods are discussed, and the simulation setup is described.  
+The remainder of this paper is structured as follows. Section 2 discusses the current literature. The methodology is outlined in section 3, where the POT and BM methods are discussed, and the simulation setup is described. Section 4 closely examines the empirical data. The performance of both methods are analyzed and discussed in Section 5. Section 6 concludes the research.
 
+\newpage
 \section{Literature}
 EVT is a field of research within statistics that primarily focuses on the stochastic behaviour of extreme values in a process. The history of EVT dates all the way back to Bernoulli in 1709 as demonstrated by \citeA{kotz2000extreme}. Over the years, EVT has evolved and currently relies mainly on two distinct methods to model the distribution of extreme values: the BM and the POT method. Between the two, the BM method has been around for longer. It was first mentioned in \citeA{fisher1928limiting}, who indicated that the limiting behavior of maxima can be described by a set of three extreme value distributions: the Gumbel, Fr\'echet, and the inverse Weibull distributions. \\
 
@@ -196,84 +197,6 @@ The POT method has recently gained significant popularity over the BM method. Th
 As with the BM method, the most important methods for estimating the parameters of the GPD distribution are the maximum likelihood and the probability weighted moments, which are both discussed in \citeA{hosking1987parameter}. \citeA{smith1987estimating} has extensively investigated the tail estimation based on IID data and has derived the theoretical properties of the maximum likelihood estimator based on POT. When the limit of the maxima is of type II, another method to estimate the shape parameters is the Hill estimator by citeA{hill1975simple}. Hence, high quantiles of the data can be estimated through the estimated parameters of the GPD and the inverse CDF or by extrapolating a less extreme quantile to a high quantile using the reciprocal of the shape parameter. Both methods are described by \citeA{mcneil2005quantitative}. In the case of non-IID data, \citeA{drees2003extreme} has demonstrated that the derived methods can still be used. However, the asymptotic variance is different from, usually higher than, the IID case. \citeA{drees2003extreme} also provides a theoretical estimator for the asymptotic variance.
 
 \newpage
-\section{Data}
-\subsection{Data Collection}
-The empirical analysis focuses on a diversified portfolio of European markets. We setup a hypothetical portfolio investing $70\%$ in stocks and $30\%$ in bonds. The STOXX Europe 600 index, which holds 600 European companies, is used to represent the European stock market. The index represents large, medium and small capitalisation companies in 17 European countries that, cover approximately 90$\%$ of the free-float market capitalisation of the European stock market. The Barclays Euro Aggregate Treasury Total Return Index is used to represent the European bond market. This bond index contains 372 fixed-income securities from 13 different countries and are weighted by their market value. The data is obtained from Bloomberg Financial Markets and contain daily observations from 1 January, 2000 till 31 December, 2017, which results in 4,550 observations for each index. The index values are converted to daily returns as $r_t = log(I_t/I_{t-1})$ where $I_t$ is the index value at time $t$. Figure \ref{fig:data} illustrates the index levels and returns of the stock index, bond index, and the stock-bond portfolio respectively. 
-
-
-\begin{figure}[H]
-$\begin{array}{rl}
-    \multicolumn{2}{c}{\text{\small{(a) STOXX Europe Index}}} \\
-    \includegraphics[height=7.25cm, width=1\linewidth]{Figures/stocks.jpg}  \\
-    \multicolumn{2}{c}{\text{\small{(b) Barclays Euro Aggregate Treasury Total Return Index}}} \\
-    \includegraphics[height=7.25cm, width=1\linewidth]{Figures/bonds.jpg}\\ 
-    \multicolumn{2}{c}{\text{\small (c) Portfolio returns with $70\%$ stocks and $30\%$ bonds allocation}} \\
-    \multicolumn{2}{c}{\includegraphics[height=7.25cm, width=1\linewidth]{Figures/portfolio.jpg}} 
-\end{array}$
-\vspace{-0.8cm}
-\captionsetup[figure]{font=small,labelfont=small}
-\caption{Index levels and returns for the stock index, the bond index and the portfolio.}
-\label{fig:data}
-\end{figure}
-
-The period from the beginning of 2000 till the end of 2017 is of interest because it contains two major events: the burst of the dot-com bubble in 2000 and the global financial crisis of 2008. Both events are represented by a large spike in volatility which is more prominent in the stock index than the bond index, as expected. Even though the portfolio is well-diversified with positions in 600 different stocks and 372 fixed-income securities, there is still a clear indication of volatility clustering.
-
-\subsection{Descriptive Statistics}
-The statistical properties of the empirical data need to be analysed in further detail. The descriptive statistics are outlined in Table \ref{tab:desstats}. As expected from the difference in nature between stocks and fixed-income securities, the standard deviation of the stock index is almost six times as high as the standard deviation of the bond index. The returns of both indices are well centred around zero, as indicated by the mean and median. For both indices the skewnesses are negative and with kurtosises higher then 3, that of the normal distribution. It is common for financial securities to have more extreme losses than extreme profits as reflected by the negative skewness. The stylised fact of more extreme values than the normal distribution and hence the notion of fatter tails is captured by the high values of kurtosis. Formally, we reject that each series follow a normal distribution by the Jarque-Bera test. As the chosen portfolio is a weighted average between the stock and bond index, the values of the statistical properties lie between those of the stock and bond index.
-
-
-\begin{table}[H]
-\captionsetup{width=.9\textwidth}
-\caption{Descriptive statistics of the stock index, bond index, and portfolio returns.} 
-\centering
-\label{tab:desstats}
-\scalebox{0.7}{
-\begin{tabular}{l|lllllllllll} \hline \hline
-\textbf{Return Series} & \textbf{\# Obs} & \textbf{Min.}    & \textbf{Max.}   & \textbf{Mean} & \textbf{Median}   & \textbf{Std. Dev} & \textbf{Skewness} & \textbf{Kurtosis} & \textbf{Jarque-Bera} \\ \hline
-STOXX 600     & 4549   & -0.0886 & 0.0941 & 0.0000 & 0.0003 & 0.0124   & -0.2125  & 8.5901  & 0.0000 \\
-Barclays Bond & 4549   & -0.0152 & 0.0178 & 0.0002 & 0.0002 & 0.0023   & -0.1371  & 6.5306  & 0.0000   \\
-Portfolio     & 4549   & -0.0606  & 0.0640 & 0.0000 & 0.0002 & 0.0086   & -0.2023  & 8.4798  & 0.0000  \\ \hline \hline
-\end{tabular}}
-\end{table}\\
-
-The results of the Ljung-Box test can be found in Table \ref{tab:ljungbox}, which provide more in-depth analysis of the serial dependency. Furthermore, Figure \ref{fig:autocorrs} demonstrates autocorrelation and partial autocorrelation plots of the portfolio returns and the squared portfolio returns. The Ljung-Box Q-test indicates that for all returns series, the null hypothesis of independently distributed data can be rejected at a $5\%$ significance level. These results are further supported by the correlation plots of the portfolio returns. For both the autocorrelation and the partial autocorrelation, there are multiple lags with significant correlation, most notably at lags 2, 3, 5, and 6. The correlation plots of the squared portfolio returns exhibit a strong significant autocorrelation. This confirms the presence of volatility clustering.
-\newpage
-
-\begin{table}[H]
-\captionsetup{width=.9\textwidth}
-\caption{Ljung-Box Q-test results.} 
-\centering
-\label{tab:ljungbox}
-\scalebox{0.9}{
-\begin{tabular}{l|lll}
-\hline \hline
-\textbf{Return Series}    & \textbf{Test-statistic} & \textbf{Critical value} & \textbf{\textit{p}-value} \\ \hline
-STOXX 600         & 54.02          & 31.41          & 0.0006  \\
-Barclays Bond     & 41.39          & 31.41          & 0.0033  \\
-Portfolio         & 49.81          & 31.41          & 0.0002  \\
-Squared Portfolio & 3940.17        & 31.41          & 0.0000  \\ \hline \hline
-\end{tabular}}
-\begin{tablenotes}
-      \tiny
-      \item * Test results are based on significance level $\alpha=5\%$ and degrees of freedom equal to number of lags selected is 20.
-\end{tablenotes}
-\end{table}
-
-
-\begin{figure}[H]
-$\begin{array}{rl}
-    \multicolumn{1}{c}{\text{\small{(a) Serial dependence analysis on the portfolio returns}}} \\
-    \includegraphics[height=7.8cm, width=1\linewidth]{Figures/portfolio_returns_autocorr.jpg}  \\
-    \multicolumn{1}{c}{\text{\small{(b) Serial dependence analysis on the squared portfolio returns}}} \\
-    \includegraphics[height=7.8cm, width=1\linewidth]{Figures/squared_portfolio_returns_autocorr.jpg}
-\end{array}$
-\vspace{-0.8cm}
-\captionsetup[figure]{font=small,labelfont=small}
-\caption{Sample autocorrelation and partial autocorrelation plots of the realised and squared portfolio returns.}
-\label{fig:autocorrs}
-\end{figure}
-
-
 \section{Methodology}
 \subsection{Value-at-Risk}
 Before discussing the BM and POT methods in further detail, a formal definition of the VaR is needed. The VaR is a quantitative risk measure that is usually applied on the loss distribution. In probabilistic terms, the VaR can be interpreted as the quantile of this loss distribution. A great definition is given by \citeA{mcneil2005quantitative} as follows
@@ -285,6 +208,7 @@ Before discussing the BM and POT methods in further detail, a formal definition 
 \end{mydef}
 \noindent It is common to use high values for $p$ such as $p=0.95$ or $p=0.99$. The focus of this paper lies in extreme values and inferring high quantiles using EVT. Therefore, the confidence level of interest throughout this paper is chosen to be $p=0.9999$. The major drawback of the VaR as a risk measure is that the VaR does not give any information about the extreme losses that occur with probability less then $1-p$.
 
+\subsection{Extreme Value Theory}
 
 \subsection{Block Maxima}
 This section first discusses the BM method for the IID case, before the theory is extended to serially dependent data. The BM method has been fundamental and is considered to be one of the oldest models within EVT. It is essential to discuss the probability theory behind the convergence of maxima before deriving the estimators in the BM method. Assume a set of IID random variables denoted as $X_1, X_2, \dots$ with distribution function $F$ and define the maximum as $M_n=\max\left(X_1, \dots, X_n\right)$. The EVT considers the limiting distribution of $M_n$. Assume that with normalising constants $a_n$ and $b_n$, $M_n$ converge in distribution as $n\to \infty$, i.e.
@@ -330,7 +254,7 @@ The aim of this paper is to infer high quantiles on financial losses containing 
 \label{fig:blockmaxima}
 \end{figure}
 
-To estimate the parameters of the GEV distribution, either of the following two estimators is usually used: the maximum likelihood (ML) estimators, see \citeA{prescott1980maximum} and \citeA{bucher2018maximum}, and the probability weighted moment (PWM) estimators, see \citeA{hosking1987parameter} and \citeA{ferreira2015block}. In this study, we use maximum likelihood both in the BM as the POT approach in order to make a fair comparison. This paper adopts the estimators derived in \citeA{bucher2018maximum}, where the Fr\'echet distribution is used and the location parameter is set to zero. However, in order to derive the VaR estimators, the application of the maximum likelihood method for the Fr\'echet distribution is first explained in detail. \\
+To estimate the parameters of the GEV distribution, either of the following two estimators is usually used: the maximum likelihood (ML) estimators, see \citeA{prescott1980maximum} and \citeA{bucher2018maximum}, and the probability weighted moment (PWM) estimators, see \citeA{hosking1987parameter} and \citeA{ferreira2015block}. In this study, we use maximum likelihood both in the BM as the POT approach in order to make a fair comparison. This paper adopts the estimators derived in \citeA{bucher2018maximum}, where the Fr\'echet distribution is used and the location parameter is set to zero. Here, we first explain the application of the maximum likelihood estimators for the Fr\'echet distribution in detail. \\
 
 The CDF of the Fr\'echet distribution can be obtained via the GEV distribution \eqref{eq:GEV} by using $\xi>0$ and $y=1+\xi x$ and is thus defined as 
 \begin{equation}
@@ -357,25 +281,27 @@ Let $y=\left(y_1,\dots,y_k\right)\in \left(0, \infty\right)^k$ be a sample vecto
 \begin{equation}
 \begin{split}
     & l\left(\xi,\sigma;y_1, \dots, y_n\right) \\
-    & = \sum_{i=1}^{k}\ln{\left(f_{\xi,\sigma}\left(y\right)\right)} \\
+    & = \sum_{i=1}^{k}\ln{\left(f_{\xi,\sigma}\left(y_i\right)\right)} \\
     & = -k\left(\ln{\left(\xi\right)}+\ln{\left(\sigma\right)}\right)-\sigma^{\frac{1}{\xi}}\sum_{i=1}^k y_i^{-\frac{1}{\xi}} - \left(\frac{1}{\xi}+1\right)\left(\sum_{i=1}^k \ln{\left(y_i\right)} - k\ln{\left(\sigma\right)}\right).
     \label{eq:frechetll}
 \end{split}
 \end{equation}
-The maximum likelihood estimators $\hat{\xi}$, $\hat{\sigma}$ are obtained by finding the root of the partial derivative of \eqref{eq:frechetll} to the respective parameter. \citeA{bucher2018maximum}, derived the maximum likelihood estimators for the shape and scale parameter and assumed the location parameter to be zero. Furthermore, the authors established the consistency and asymptotic normality for the maximum likelihood estimators for both IID and strictly stationary time series. The maximum likelihood estimators for the scale parameter $\sigma$ and shape parameter $\xi$ are obtained as follows
+The maximum likelihood estimators $\hat{\xi}$, $\hat{\sigma}$ are obtained by maximizing \eqref{eq:frechetll} to the respective parameter. \citeA{bucher2018maximum}, derived the maximum likelihood estimators for the shape and scale parameter and established the consistency and asymptotic normality for the maximum likelihood estimators for both IID and strictly stationary time series. The maximum likelihood estimators for the scale parameter $\sigma$ and shape parameter $\xi$ are obtained as follows
 \begin{equation}
     \hat{\sigma} = \left(\frac{1}{k}\sum^k_{i=1}y_i^{-\frac{1}{\hat{\xi}}}\right)^{-\hat{\xi}},
     \label{eq:bmmlsigma}
 \end{equation}
-\noindent where $\hat{\xi}$ is solution of $\Psi_k\left(\xi|y\right)=0$, where $\Psi_k\left(\xi|y\right)$ is defined as
+\noindent where $\hat{\xi}$ is solution of $\Psi_k\left(\xi|y\right)=0$, with $\Psi_k\left(\xi|y\right)$ defined as
 \begin{equation}
         \Psi_k\left(\xi|y\right) = \xi + \frac{\frac{1}{k}\sum^k_{i=1}y_i^{-\frac{1}{\xi}}\ln{\left(y_i\right)}}{\frac{1}{k}\sum^k_{i=1}y_i^{-\frac{1}{\xi}}} - \frac{1}{k}\sum^k_{i=1}\ln{\left(y_i\right)}.
         \label{eq:bmmlshape}
 \end{equation}
-Assume that the block maxima $\bm{M_n}$ approximately follow the Fr\'echet distribution, then the parameters can be estimated by replacing the sample vector $y$ by $\bm{M_n}$ in above derived estimators. After obtaining parameter estimates, it is now fairly easy to infer quantiles of the block maxima $\bm{M_n}$ by inverting the CDF and using the maximum likelihood parameters. The relation between the VaR of the block maxima, which is sometimes referred to as the return level, and the VaR of the original observations is demonstrated by \citeA{mcneil1998calculating}. Because the VaR of the block maxima is a quantile on extreme values, it is therefore a high quantile of the original data. As we assumed the data to be IID, the probability level corresponding with the VaR of the block maxima can then be calculated as
+If $\xi>0$, the block maxima $\bm{M_n}$ approximately follow the Fr\'echet distribution. The parameters can be estimated by replacing the sample vector $y$ by $\bm{M_n}$ in above derived estimators. After obtaining parameter estimates, we estimate the quantiles of the block maxima $\bm{M_n}$ by inverting the CDF and using the maximum likelihood parameters. \\
+
+The relation between the VaR of the block maxima, which is sometimes referred to as the return level, and the VaR of the original observations is demonstrated by \citeA{mcneil1998calculating}. Because the VaR of the block maxima is a quantile on extreme values, it is therefore a high quantile of the original data. When the data are IID, the probability level corresponding to the VaR of the block maxima can then be calculated as
 
 \begin{equation}
-    \Pr\left(\bm{M_n}<VaR\right)=\Pr^{\quad n}\left(X<VaR\right)=p^n.
+    \Pr\left(M_{n,i}<VaR_p\right)=\left(\Pr\left(X<VaR_p\right)\right)^n=p^n.
     \label{eq:relationrlvar}
 \end{equation}
 That is, the VaR is a quantile of the block maxima with probability level $p^n$. Therefore, using the inverse of equation \eqref{eq:frechetcdf} and parameter estimates \eqref{eq:bmmlsigma} and \eqref{eq:bmmlshape} we can estimate the VaR as
@@ -392,12 +318,14 @@ When moving away from IID data and allowing for serial dependence, the convergen
     \lim_{n\to\infty} P\left(\frac{\tilde{M}_n-b_n}{a_n}\leq x\right)=H^{\theta}\left(x\right),
 \end{equation}
 
-\noindent where we use $\tilde{M}_n$ to indicate that the data contains serial dependence and where $\theta$ in $\left(0, 1\right]$ is the so-called extremal index. Assuming that the maxima $\tilde{M}_n$ is obtained from a stationary series with the same distribution function $F$ as in the IID case ($M_n$); the distribution of $H_{\xi}^{\theta}\left(x\right)$ is of the same type as $H_{\xi}\left(x\right)$ and contains the exact same $\xi$ parameter. However, the location and scale parameter are different in this case. The extremal index is an important parameter that measures the degree of clustering of extremes in a stationary process. \citeA{mcneil1998calculating} states that for large $n$ and $u=a_nx+b_n$ it now holds that $P\left(M_n\leq u\right)\approx P^{\theta}\left(\tilde{M}_n\leq u\right)=F^{n\theta}\left(u\right)$ so that for $u$ large the probability distribution of the maximm of $n$ observations from the time series with extremal index $\theta$ can be approximated by the distribution of the maximum of $n\theta<n$ observations from the associated IID time series. In a sense, $n\theta$ can be thought of as counting the number of roughly independent clusters of observations in $n$ observations. The extremal index $\theta$ is often interpreted as the reciprocal of the mean cluster size.
+\noindent where we use $\tilde{M}_n$ to indicate that the data contains serial dependence and where $\theta$ in $\left(0, 1\right]$ is the so-called extremal index. Assuming that the maxima $\tilde{M}_n$ is obtained from a stationary series with the same distribution function $F$ as in the IID case ($M_n$); the distribution of $H_{\xi}^{\theta}\left(x\right)$ is of the same type as $H_{\xi}\left(x\right)$ with the exact same $\xi$ parameter. However, the location and scale parameter are different in this case. The extremal index is an important parameter that measures the degree of clustering of extremes in a stationary process.\\
+
+\citeA{mcneil1998calculating} states that for large $n$ and $u=a_nx+b_n$ it now holds that $P\left(M_n\leq u\right)\approx P^{\theta}\left(\tilde{M}_n\leq u\right)=F^{n\theta}\left(u\right)$ so that for $u$ large the probability distribution of the maximum of $n$ observations from the time series with extremal index $\theta$ can be approximated by the distribution of the maximum of $n\theta<n$ observations from the associated IID time series. In a sense, $n\theta$ can be thought of as counting the number of roughly independent clusters of observations in $n$ observations. The extremal index $\theta$ is often interpreted as the reciprocal of the mean cluster size.
 \\
 
 Due to the serial dependence, the relation changes between the VaR of the block maxima and the VaR of the original observations and are now dependent on the extremal index. Demonstrated by \citeA{mcneil1998calculating}, the equations \eqref{eq:relationrlvar} and \eqref{eq:bmestvariid} now becomes
 \begin{equation}
-    \Pr\left(\bm{M_n}<VaR\right)=\Pr^{\quad n\theta}\left(X<VaR\right)=p^{n\theta},
+    \Pr\left(M_{n,i}<VaR_p\right)=\left(\Pr\left(X<VaR_p\right)\right)^{n\theta}=p^{n\theta},
     \label{eq:relationrlvar2}
 \end{equation}
 \noindent and
@@ -406,7 +334,8 @@ Due to the serial dependence, the relation changes between the VaR of the block 
     \label{eq:bmestvarserialdep}
 \end{equation}
 \\
-Hence, when dealing with serial dependence, we need to estimate the extremal index first. We will adopt the sliding block estimators as proposed by \citeA{berghaus2018weak}:
+
+When dealing with serial dependence, we need to estimate the extremal index first. \citeA{berghaus2018weak} has recently analyzed estimators for the extremal index based on disjoint and sliding block maxima. They derived the asymptotic normality and revealed that the sliding block estimator, outperforms other block estimators. Hence, we will adopt the sliding block estimators as proposed by \citeA{berghaus2018weak}:
 
 \begin{equation}
     \hat{\theta}^{(1),sl}_n=\left(\frac{1}{k}\sum^{k}_{i=1}\hat{Z}^{sl}_{n,i}\right)^{-1}, \quad \hat{\theta}^{(2),sl}_n=\left(\frac{1}{k}\sum^{k}_{i=1}\hat{Y}^{sl}_{n,i}\right)^{-1},
@@ -420,13 +349,13 @@ with
 \begin{equation*}
     \hat{W}^{sl}_{n,i}=\hat{F}_n\left(M^{sl}_{n,i}\right).
 \end{equation*}
-$\hat{F}_n$ is the empirical CDF of the observations $X_1, \dots, X_N$ and $M^{sl}_{n,i} \in \bm{M^{sl}_{n}}:=\{M_{n,1}, \dots, M_{n,k}\}$.
+Here, $\hat{F}_n$ is the empirical CDF of the observations $X_1, \dots, X_N$. The sliding block maxima are obtained by dividing the sample of observations into $N-n+1$ blocks of length $n$, such that $M^{sl}_{n,i}=\max\left(X_{i},\dots,X_{i+n-1}\right)$ for $t=1,\dots,N-n+1$.
 \\
 
-To summarize, when dealing with IID data, the VaR can be estimated using equation \eqref{eq:bmestvariid}. Here, the relation between the quantiles of the block maxima and that of the original observations, and the estimated location, scale, and shape parameters are used. These parameters are often estimated using either maximum likelihood or probability weighted moment. In this paper we obtain the maximum likelihood parameters with equation \eqref{eq:bmmlsigma} and \eqref{eq:bmmlshape}. When the data is no longer IID and becomes a strictly stationary time series, the location and scale parameters may change but the shape parameters is exactly the same. More significantly, the relation between the quantiles of the block maxima and that of the original observations is now dependent on the extremal index. Under serial dependence, the VaR estimator now changes to equation \eqref{eq:bmestvarserialdep} using equation \eqref{eq:estextremalindex} to estimate the extremal index.
+To summarize, when dealing with IID data, the VaR can be estimated using equation \eqref{eq:bmestvariid}. Here, the relation between the quantiles of the block maxima and that of the original observations, and the estimated scale, and shape parameters are used. These parameters are often estimated using either maximum likelihood or probability weighted moment. In this paper we obtain the maximum likelihood parameters with equation \eqref{eq:bmmlsigma} and \eqref{eq:bmmlshape}. If the data is a strictly stationary time series, the scale parameter may change but the shape parameter is exactly the same. The relation between the quantiles of the block maxima and that of the original observations now depends on the extremal index. Under serial dependence, the VaR estimator now changes to equation \eqref{eq:bmestvarserialdep} using equation \eqref{eq:estextremalindex} to estimate the extremal index.
 
 \subsection{Peak over Threshold}
-It is often mentioned that a major disadvantage of the BM method is that it potentially neglects extreme values in the tails. This is because only the maximum of a group of data is used to estimate the GEV distribution. The existence of serial dependency within the data magnifies this shortcoming. This gave rise to the POT, another often-used method in EVT, that considers the extreme observations that exceed a certain threshold as illustrated in Figure \ref{fig:peakoverthreshold}. \\
+A major disadvantage of the BM method is that it potentially neglects extreme values in the tails. This is because only the maximum of a group of data is used to estimate the GEV distribution. The existence of serial dependency within the data magnifies this shortcoming. This gave rise to the POT, another often-used method in EVT, that considers the extreme observations that exceed a certain threshold as illustrated in Figure \ref{fig:peakoverthreshold}. This section begins with discussing the theory of the POT method under the IID case. Afterwards, the IID assumption is relaxed and the differences are analysed. \\
 
 \begin{figure}[H]
 \includegraphics[height=7.8cm, width=\linewidth]{Figures/peakoverthreshold_example2.jpg} 
@@ -436,7 +365,7 @@ It is often mentioned that a major disadvantage of the BM method is that it pote
 \label{fig:peakoverthreshold}
 \end{figure}
 
-This section of the analysis begin by discussing the theory of the POT method under the IID case. Afterwards, the IID assumption is relaxed and the differences are analysed. Let the losses $X$ be a random variable with possibly unknown distribution function $F$ such that $F(x) = P(X \leq x)$. We then define the CDF $F_u(x)$ for the excess losses $X-u$, given that the losses exceed the threshold $u$ as 
+Let the losses $X$ be a random variable with possibly unknown distribution function $F$ such that $F(x) = P(X \leq x)$. We then define the CDF $F_u(x)$ for the excess losses $X-u$, given that the losses exceed the threshold $u$ as 
 
 \begin{equation}
     \begin{split}
@@ -529,19 +458,21 @@ Whenever the data is no longer IID and serial dependence is relevant, the estima
 \subsection{Simulation Setup}
 The simulation uses a general framework similar to the application. The goal of the simulation setup is to generate multiple scenarios in which the level of autocorrelation, volatility clustering and tail dependence between two series are controlled with a single model. First, the model is explained in steps, then each component is explained in more detail. All the components are then combined into a single model, and how and which parameters will be tuned is discussed at the end.\\
 
-First, the returns of two different series are simulated using an Autoregresive-Moving-Average (ARMA) model of which the innovations are generated by a Generalized Autoregressive Conditional Heteroskedasticity (GARCH) model. The parameters of the ARMA-GARCH model of each series are set independently. The ARMA component will be the main contributor for generating serially dependent data. The serial dependence can be controlled by both the AR as well as the MA term. The AR term enables the direct incorporation of the dependence of the lagged observations to the current observations. The MA term models the dependence between observations indirectly via the unobserved shocks. By simulating the innovations with a GARCH process instead of a white noise process, the level of volatility clustering within the simulated data can be controlled. The innovations are assumed as a white noise process following the standard normal distribution. Nevertheless, the cross-sectional dependence between the two innovation processes will be simulated using a Clayton copula. The marginal distributions for each innovation process is a standard normal distribution. Finally, the simulated data can be constructed as a weighted average of the two simulated series.\\
+First, the returns of two different series are simulated using an Autoregresive-Moving-Average (ARMA) model of which the innovations are generated by a Generalized Autoregressive Conditional Heteroskedasticity (GARCH) model. The parameters of the ARMA-GARCH model of each series are set independently. The ARMA structure will be the main contributor for generating serially dependent data. The serial dependence can be controlled by both the AR and MA term. The AR term enables the direct incorporation of the dependence of the lagged observations to the current observations. The MA term models the dependence between observations indirectly via the unobserved shocks. By simulating the innovations with a GARCH process instead of a white noise process, the level of volatility clustering within the simulated data can be controlled. The process linking the variance and the innovations, denoted as the GARCH innovations for simplicity, is assumed as a white noise process following the standard normal distribution. Nevertheless, the cross-sectional dependence between the two GARCH innovation processes will be simulated using a Clayton copula. Finally, the simulated portfolio is obtained as a weighted average of the two simulated series as follows, $ X_t = wX_{t,1} + \left(1-w\right)X_{t,2}$.\\
 
 The ARMA(1,1)-GARCH(1,1) model used for each series $j=1,2$ is defined by
 \begin{equation}
     \begin{split}
-        X_{t,j} &= c_j + \varepsilon_{t,j} + \phi_jX_{t-1,j} + \theta_j\varepsilon_{t-1,j},\\ \varepsilon_{t,j} &= \sigma_{t,j}z_{t,j}, \quad z_{t,j} \sim \mathcal{N}\left(0, 1\right)\\
-        \sigma^2_{t,j} &= \omega_j + \alpha_j\varepsilon_{t-1,j}^2 + \beta_j\sigma_{t-1,j}^2.
+        X_{t,j} &= c_j + \varepsilon_{t,j} + \phi_jX_{t-1,j} + \theta_j\varepsilon_{t-1,j},\\
+        \varepsilon_{t,j} &= \sigma_{t,j}z_{t,j}, \\
+        \sigma^2_{t,j} &= \omega_j + \alpha_j\varepsilon_{t-1,j}^2 + \beta_j\sigma_{t-1,j}^2, \\
+        z_{t,j} &\sim \mathcal{N}\left(0, 1\right),\\
     \end{split}
     \label{eq:armagarchdef}
 \end{equation}
-The conditional variance is denoted by $\sigma^2_t$ and the parameters $\phi_i$, $\theta_i$, $\alpha_i$ and $\beta_i$ are the coefficients of the AR, MA, innovations, and conditional variance terms respectively. The $p$, $q$, $j$, and $k$ are the corresponding number of included terms.\\
+and where the copula of $\left(Z_{t,1},Z_{t,2}\right)$ follows the Clayton copula. The conditional variance is denoted by $\sigma^2_t$ and the parameters $\phi_i$, $\theta_i$, $\alpha_i$ and $\beta_i$ are the coefficients of the AR, MA, innovations, and conditional variance terms respectively.\\
 
-Before proceeding to the implementation of the Clayton copula, a general definition of a copula is necessary: 
+Before proceeding to the implementation of the Clayton copula, a general definition of a copula is given as follows: 
 
 
 \begin{mydef}
@@ -552,7 +483,7 @@ A $d$-dimensional copula is a joint cumulative distribution function on $\left[0
     Let $F$ be a joint distribution with marginals $F_1,\dots,F_d$. Then there exists a copula $C(x_1,\dots,x_d)$ such that $F(x_1,\dots,x_d)=C(F_1(x_1),\dots,F_d(x_d))$. Conversely, if $C$ is a copula and $F_1,\dots,F_d$ are univariate distributions, then $F$ is a joint distribution with marginals $F_1,\dots,F_d$.
 \end{thm}
 
-The simulated data is obtained as the weighted average from two series. The bivariate-Clayton copula is an Archimedean copula that allows any specific non-zero level of lower tail dependency between two series. This tail dependency lies in the negative tail, corresponding to extreme losses, and the advantage of the Clayton copula is that the level of dependence can be set by a single parameter, often denoted as $\theta$. The bivariate Clayton copula is given by
+The bivariate-Clayton copula is an Archimedean copula that allows non-zero level of lower tail dependency between two series. This tail dependency lies in the negative tail, corresponding to extreme losses, and the advantage of the Clayton copula is that the level of dependence can be set by a single parameter, often denoted as $\theta$. The bivariate Clayton copula is given by
 
 \begin{equation}
     C_\theta^{Cl}\left(u_1,u_2\right) = \left(u_1^{-\theta} + u_2^{-\theta} - 1\right)^{-\frac{1}{\theta}} \quad for \quad 0<\theta<\infty.
@@ -565,16 +496,15 @@ To combine all the different components in the simulation model, we derived the 
 \begin{myalgo}{\textbf{(Data Generating Process)}}
     \quad
     \begin{enumerate}
-        \item Generate two uniformly distributed series from the Clayton copula. Draw two independent uniform random variates $\left(u_{1},v_{2}\right)$ and set
-            \begin{equation}                u_{2}=\left[u_{1}^{-\theta^{Cl}}\left(v_{2}^{-\frac{\theta^{Cl}}{\left(1+\theta^{Cl}\right)}}-1\right)+1\right]^{-\frac{1}{\theta^{Cl}}}.
+        \item Generate two uniformly distributed series from the Clayton copula. Draw two independent uniform random variables $\left(U_{t,1},V_{t,2}\right)$ and set
+            \begin{equation}                U_{t,2}=\left[U_{t,1}^{-\theta^{Cl}}\left(v_{2}^{-\frac{\theta^{Cl}}{\left(1+\theta^{Cl}\right)}}-1\right)+1\right]^{-\frac{1}{\theta^{Cl}}}.
             \end{equation}
-        The simulated $u_1$ and $u_2$ have a lower tail dependency. It is important to note however, that both $u_1$ and $u_2$ are IID.
-        \item Convert the uniform values to standard normal distributed variables using the inverse of the standard normal CDF
+        \item Convert the $\left(U_{t,1},U_{t,2}\right)$ to standard normal marginals using the inverse of the standard normal CDF
         \begin{equation}
-            z_{t,1} = \Phi^{-1}(u_1) \quad \text{and} \quad z_{t,2} = \Phi^{-1}(u_2).
+            Z_{t,1} = \Phi^{-1}(U_{t,1}) \quad \text{and} \quad Z_{t,2} = \Phi^{-1}(U_{t,2}).
         \end{equation}
-        The simulated standard normal variables $z_{t,1}$ and $z_{t,2}$ have lower tail dependency but are both IID series.
-        \item Using $z_{t,1}$ and $z_{t,2}$ to simulate two series from the ARMA(1,1)-GARCH(1,1) model for $j=1,2$:
+        The simulated standard normal variables $Z_{t,1}$ and $Z_{t,2}$ have lower tail dependency but are both IID series.
+        \item Using $\left(Z_{t,1},Z_{t,2}\right)$ to simulate two series from the ARMA(1,1)-GARCH(1,1) model for $j=1,2$:
         \begin{equation}
             \begin{split}
                 X_{t,j} &= c_{j} + \varepsilon_{t,j} + \phi_{j}X_{t-1,j} + \theta_{j}\varepsilon_{t-1,j},\\ \varepsilon_{t,j} &= \sigma_{t,j}z_{t,j}\\
@@ -589,12 +519,12 @@ To combine all the different components in the simulation model, we derived the 
     \end{enumerate}
 \end{myalgo}
 
-For every model, which are described below, $1$ sample is obtained to calculate the true VaR and $1,000$ samples are generated for both methods to estimate the VaR. Every sample will use a burn-in sample size of $1,000$ data points. The sample to calculate the true VaR will contain $1,000,000$ data points in order to accurately calculate the true VaR as the empirical quantile and the samples used for estimation will all contain $2,000$ data points. This would ensure the need for EVT when estimating the $0.9999$ quantile.\\
+For every specification of the parameters, one sample with sample size $1,000,000$ is obtained to calculate the true VaR and $1,000$ samples with sample size $2,000$ are generated for comparing the two methods to estimate the VaR. Every sample will use a burn-in sample size of $1,000$ data points. The true VaR is then estimated as the empirical quantile from the large sample.\\
 
 The set of models are divided into two groups: the first group depends only on one ARMA-GARCH model by setting $w=1$ and $z_{t,1}\sim \mathcal{N}\left(0, 1\right)$, the second group uses the Clayton copula to introduce tail dependency and the two time series are combined by setting $w=0.5$.
 
-\subsection{Evaluation Methods}
-Results are obtained from the simulation and financial application. The VaR estimates from both applications are evaluated differently. In the simulation application it is possible to obtain the true VaR and hence, the VaR estimates are evaluated by calculating the root mean squared error (RMSE) and root mean squared percentage error (RMSPE). After obtaining $m=1,000$ VaR estimates per simulation model described in section 4.4, the RMSE and RMSPE can be calculated as
+\subsection{Simulation Evaluation}
+In the simulation application it is possible to obtain the true VaR and hence, the VaR estimates are evaluated by calculating the root mean squared error (RMSE) and root mean squared percentage error (RMSPE). After obtaining $m=1,000$ VaR estimates per simulation model described in section 4.4, the RMSE and RMSPE can be calculated as
 
 \begin{equation}
     RMSE = \sqrt{\frac{\sum^m_{i=1}\left(\widehat{VaR}_{p_n} - VaR_{p_n}\right)^2}{m}},
@@ -606,14 +536,94 @@ Results are obtained from the simulation and financial application. The VaR esti
     \label{eq:mape}
 \end{equation}
  \\
+For both the POT and BM method, the RMSE is calculated using same true VaR. For a given specification of parameters, we can directly compare the performance of the two methods using RMSE. However, since the scale of the true VaR will differ across different specifications of parameters, it is not possible to make a comparison across different specifications of parameters using RMSE. The RMSPE is based on the percentage deviation and will therefore be used to compare the two methods at different parameter specifications. 
 
-In the financial application, the VaR is estimated on a stock-bond portfolio. It is therefore not possible to infer the true VaR. The VaR estimates are now evaluated using the binomial method as demonstrated by \citeA{christoffersen1998evaluating}. The binomial method is based on the unconditional coverage of the risk measure. The unconditional coverage can be seen as the empirical probability of exceeding the estimated VaR, $a^*=\frac{x}{N}$, with $x$ the number of observations exceeding the VaR estimate. By definition, the unconditional coverage should equal the confidence level of the VaR. Assume the confidence level $p_n$, then the probability of observing $x$ exceptions in a testing sample of sample size $W$ should equal the binomial pdf under the null hypothesis \begin{equation}
+\subsection{Application}
+In the financial application, the VaR is estimated on a stock-bond portfolio using both methods. Since the underlying data generating process is unknown, we can not evaluate the VaR estimates by comparing it to the true VaR. The VaR estimates are now evaluated using the binomial method as demonstrated by \citeA{christoffersen1998evaluating}. The binomial method is based on the unconditional coverage of the risk measure. The unconditional coverage can be seen as the empirical probability of exceeding the estimated VaR, $a^*=\frac{x}{N}$, with $x$ the number of observations exceeding the VaR estimate. By definition, the unconditional coverage should equal the confidence level of the VaR. Assume the confidence level $p_n$, then the probability of observing $x$ exceptions in a testing sample of sample size $W$ should equal the binomial pdf under the null hypothesis \begin{equation}
     Pr\left(x\right) = {W\choose x}p_n^x\left(1-p_n\right)^{W-x}.
 \end{equation}
 \noindent A likelihood ratio test statistic is performed to test whether the unconditional coverage is equal to $p_n$. The test statistic can be calculated by
 \begin{equation}
     LR_{uc} = 2\left[\ln{\left(a^{*^x}\left(1-a^*\right)^{W-x}\right)}-\ln{\left(p_n^x\left(1-p_n\right)^{W-x}\right)}\right]\sim \chi^2\left(1\right).
 \end{equation}
+
+\newpage
+\section{Empirical Data}
+\subsection{Preliminary}
+The empirical analysis focuses on a diversified portfolio of European markets. We setup a hypothetical portfolio investing $70\%$ in stocks and $30\%$ in bonds. The STOXX Europe 600 index, which holds 600 European companies, is used to represent the European stock market. The index represents large, medium and small capitalisation companies in 17 European countries that, cover approximately 90$\%$ of the free-float market capitalisation of the European stock market. The Barclays Euro Aggregate Treasury Total Return Index is used to represent the European bond market. This bond index contains 372 fixed-income securities from 13 different countries and are weighted by their market value. The data is obtained from Bloomberg Financial Markets and contain daily observations from 1 January, 2000 till 31 December, 2017, which results in 4,550 observations for each index. The index values are converted to daily returns as $r_t = log(I_t/I_{t-1})$ where $I_t$ is the index value at time $t$. Figure \ref{fig:data} illustrates the index levels and returns of the stock index, bond index, and the stock-bond portfolio respectively. 
+
+
+\begin{figure}[H]
+$\begin{array}{rl}
+    \multicolumn{2}{c}{\text{\small{(a) STOXX Europe Index}}} \\
+    \includegraphics[height=7.25cm, width=1\linewidth]{Figures/stocks.jpg}  \\
+    \multicolumn{2}{c}{\text{\small{(b) Barclays Euro Aggregate Treasury Total Return Index}}} \\
+    \includegraphics[height=7.25cm, width=1\linewidth]{Figures/bonds.jpg}\\ 
+    \multicolumn{2}{c}{\text{\small (c) Portfolio returns with $70\%$ stocks and $30\%$ bonds allocation}} \\
+    \multicolumn{2}{c}{\includegraphics[height=7.25cm, width=1\linewidth]{Figures/portfolio.jpg}} 
+\end{array}$
+\vspace{-0.8cm}
+\captionsetup[figure]{font=small,labelfont=small}
+\caption{Index levels and returns for the stock index, the bond index and the portfolio.}
+\label{fig:data}
+\end{figure}
+
+The period from the beginning of 2000 till the end of 2017 is of interest because it contains two major events: the burst of the dot-com bubble in 2000 and the global financial crisis of 2008. Both events are represented by a large spike in volatility which is more prominent in the stock index than the bond index, as expected. Even though the portfolio is well-diversified with positions in 600 different stocks and 372 fixed-income securities, there is still a clear indication of volatility clustering.
+
+\subsection{Descriptive Statistics}
+The statistical properties of the empirical data need to be analysed in further detail. The descriptive statistics are outlined in Table \ref{tab:desstats}. As expected from the difference in nature between stocks and fixed-income securities, the standard deviation of the stock index is almost six times as high as the standard deviation of the bond index. The returns of both indices are well centred around zero, as indicated by the mean and median. For both indices the skewnesses are negative and with kurtosises higher then 3, that of the normal distribution. It is common for financial securities to have more extreme losses than extreme profits as reflected by the negative skewness. The stylised fact of more extreme values than the normal distribution and hence the notion of fatter tails is captured by the high values of kurtosis. Formally, we reject that each series follow a normal distribution by the Jarque-Bera test. As the chosen portfolio is a weighted average between the stock and bond index, the values of the statistical properties lie between those of the stock and bond index.
+
+
+\begin{table}[H]
+\captionsetup{width=.9\textwidth}
+\caption{Descriptive statistics of the stock index, bond index, and portfolio returns.} 
+\centering
+\label{tab:desstats}
+\scalebox{0.7}{
+\begin{tabular}{l|lllllllllll} \hline \hline
+\textbf{Return Series} & \textbf{\# Obs} & \textbf{Min.}    & \textbf{Max.}   & \textbf{Mean} & \textbf{Median}   & \textbf{Std. Dev} & \textbf{Skewness} & \textbf{Kurtosis} & \textbf{Jarque-Bera} \\ \hline
+STOXX 600     & 4549   & -0.0886 & 0.0941 & 0.0000 & 0.0003 & 0.0124   & -0.2125  & 8.5901  & 0.0000 \\
+Barclays Bond & 4549   & -0.0152 & 0.0178 & 0.0002 & 0.0002 & 0.0023   & -0.1371  & 6.5306  & 0.0000   \\
+Portfolio     & 4549   & -0.0606  & 0.0640 & 0.0000 & 0.0002 & 0.0086   & -0.2023  & 8.4798  & 0.0000  \\ \hline \hline
+\end{tabular}}
+\end{table}\\
+
+The results of the Ljung-Box test can be found in Table \ref{tab:ljungbox}, which provide more in-depth analysis of the serial dependency. Furthermore, Figure \ref{fig:autocorrs} demonstrates autocorrelation and partial autocorrelation plots of the portfolio returns and the squared portfolio returns. The Ljung-Box Q-test indicates that for all returns series, the null hypothesis of independently distributed data can be rejected at a $5\%$ significance level. These results are further supported by the correlation plots of the portfolio returns. For both the autocorrelation and the partial autocorrelation, there are multiple lags with significant correlation, most notably at lags 2, 3, 5, and 6. The correlation plots of the squared portfolio returns exhibit a strong significant autocorrelation. This confirms the presence of volatility clustering.
+\newpage
+
+\begin{table}[H]
+\captionsetup{width=.9\textwidth}
+\caption{Ljung-Box Q-test results.} 
+\centering
+\label{tab:ljungbox}
+\scalebox{0.9}{
+\begin{tabular}{l|lll}
+\hline \hline
+\textbf{Return Series}    & \textbf{Test-statistic} & \textbf{Critical value} & \textbf{\textit{p}-value} \\ \hline
+STOXX 600         & 54.02          & 31.41          & 0.0006  \\
+Barclays Bond     & 41.39          & 31.41          & 0.0033  \\
+Portfolio         & 49.81          & 31.41          & 0.0002  \\
+Squared Portfolio & 3940.17        & 31.41          & 0.0000  \\ \hline \hline
+\end{tabular}}
+\begin{tablenotes}
+      \tiny
+      \item * Test results are based on significance level $\alpha=5\%$ and degrees of freedom equal to number of lags selected is 20.
+\end{tablenotes}
+\end{table}
+
+
+\begin{figure}[H]
+$\begin{array}{rl}
+    \multicolumn{1}{c}{\text{\small{(a) Serial dependence analysis on the portfolio returns}}} \\
+    \includegraphics[height=7.8cm, width=1\linewidth]{Figures/portfolio_returns_autocorr.jpg}  \\
+    \multicolumn{1}{c}{\text{\small{(b) Serial dependence analysis on the squared portfolio returns}}} \\
+    \includegraphics[height=7.8cm, width=1\linewidth]{Figures/squared_portfolio_returns_autocorr.jpg}
+\end{array}$
+\vspace{-0.8cm}
+\captionsetup[figure]{font=small,labelfont=small}
+\caption{Sample autocorrelation and partial autocorrelation plots of the realised and squared portfolio returns.}
+\label{fig:autocorrs}
+\end{figure}
 
 \newpage
 
@@ -698,7 +708,7 @@ Furthermore, for three different values of $\theta$, the comparison of the POT a
 
 
 \section{Conclusion}
-
+test
 \newpage
 \bibliographystyle{apacite}
 \bibliography{References}
