@@ -1,0 +1,39 @@
+
+
+We follow \citeA{ferreira2015block}, who propose to use the PWM estimators to infer high quantiles. The most important derivations are summarised below.\\
+
+Let $M_{1,k}, \dots, M_{k,k}$ be the order statistics of the block maxima $M_1, \dots, M_k$. Then, the following statistics can be derived:
+
+\begin{equation}
+    \begin{split}
+        \beta_0 &= \frac{1}{k}\sum^{k}_{i=1}M_{i,k} \\
+        \beta_r &= \frac{1}{k}\sum^{k}_{i=1}\frac{\left(i-1\right) \dots \left(i-r\right)}{\left(k-1\right) \dots \left(k-r\right)}M_{i,k}, \quad r=1,2,3,\dots,k>r.
+    \end{split}
+\end{equation}
+Then the estimators for $\hat{a}_{k,n}$ and $\hat{b}_{k,n}$ are given by
+
+\begin{equation}
+        \hat{a}_{k,n} = \frac{\hat{\xi}_{k,n}}{2^{\hat{\xi}_{k,n}}-1}\frac{2\beta_1-\beta_0}{\Gamma\left(1-\hat{\xi}_{k,n}\right)} \quad \text{and} \quad \hat{b}_{k,n} = \beta_0 + \hat{a}_{k,n}\frac{1-\Gamma\left(1-\hat{\xi}_{k,n}\right)}{\hat{\xi}_{k,n}},
+\end{equation}
+where the Gamma function equals $\Gamma\left(x\right)=\int_0^{\infty}t^{x-1}e^{-t}dt, x>0$ and the estimator $\hat{\xi}_{k,n}$ is defined as the solution of the equation $\frac{3^{\hat{\xi}_{k,n}}-1}{2^{\hat{\xi}_{k,n}}-1}=\frac{3\beta_2-\beta_0}{2\beta_2-\beta_0}$. Finally, the estimator for the high quantile of the block maxima can be estimated as
+
+\begin{equation}
+    \widehat{VaR}_p^{(BM_{k,n})} = \hat{b}_{k,n} + \hat{a}_{k,n}\frac{\left(np\right)^{-\hat{\xi}_{k,n}}-1}{\hat{\xi}_{k,n}}.
+\end{equation}
+To obtain an estimate for the VaR of the original observations, the relation between the BM VaR and the VaR of the original observations is used, as stated by \citeA{mcneil1998calculating}:
+
+\begin{equation}
+    \widehat{VaR}_q = F^{-1}\left(\left(1-\frac{1}{k}\right)^{\frac{1}{n}}\right) = \widehat{VaR}_p^{(BM_{k,n})}.
+\end{equation}
+
+When moving away from IID data and allowing for serial dependence, the convergence of the maxima follows a GEV distribution raised to the power $\theta$ as illustrated by \citeA{mcneil1998calculating}:
+
+\begin{equation}
+    \lim_{n\to\infty} P\left(\frac{\tilde{M}_n-b_n}{a_n}\leq x\right)=H^{\theta}\left(x\right),
+\end{equation}
+
+\noindent where we use $\tilde{M}_n$ to indicate that the data contains serial dependence and where $\theta$ is the so-called extremal index. The extremal index is an important parameter that measures the degree of clustering of extremes in a stationary process. To estimate the VaR of the original observations, equation (7) now changes to
+
+\begin{equation}
+    \widehat{VaR}_q = F^{-1}\left(\left(1-\frac{1}{k}\right)^{\frac{1}{n\theta}}\right) = \widehat{VaR}_p^{(BM_{k,n,\theta})}.
+\end{equation}
